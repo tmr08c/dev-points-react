@@ -10,6 +10,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router/0.11.6/react-router.js"></script>
     <script src="http://kenwheeler.github.io/mcfly/McFly.js"></script>
+    <!-- Firebase JS -->
+    <script src="https://cdn.firebase.com/js/client/1.0.17/firebase.js"></script>
+    <!-- ReactFire -->
+    <script src="https://cdn.firebase.com/libs/reactfire/0.1.6/reactfire.min.js"></script>
 </head>
 <body>
     <div id="app-container"></div>
@@ -62,7 +66,6 @@
         });
 
         /** Actions */
-
         var DeveloperActions = Flux.createActions({
             addPoints: function(pointChangeobject){
                return {
@@ -89,15 +92,21 @@
         /** Controller View */
 
         var DeveloperController = React.createClass({
-            mixins: [DeveloperStore.mixin],
-            getInitialState: function(){
-                return getDevelopers();
-            },
-            storeDidChange: function() {
-                this.setState(getDevelopers());
-            },
+             mixins: [ReactFireMixin],
+
+             getInitialState: function() {
+               return {developers: []};
+             },
+
+             componentWillMount: function() {
+               this.bindAsArray(
+                 new Firebase("https://sweltering-fire-9313.firebaseio.com/developers/"),
+                 "developers"
+               );
+             },
+
             render: function() {
-                return <Developers developers={this.state.developers} />;
+              return <Developers developers={this.state.developers} />;
             }
         });
 
@@ -118,19 +127,49 @@
         });
 
         var Developer = React.createClass({
-            addPoints: function(username, numberOfPoints){
-                DeveloperActions.addPoints({username: username, numberOfPoints: numberOfPoints});
-            },
-            removePoints: function(username, numberOfPoints){
-                DeveloperActions.removePoints({username: username, numberOfPoints: numberOfPoints});
-            },
+          mixins: [ReactFireMixin],
+
+          getInitialState: function() {
+            return(
+              {
+                'developer':
+                  {
+                    'username': this.props.developer.username,
+                    'numberOfPoints': this.props.developer.numberOfPoints
+                  }
+              }
+            );
+          },
+          componentWillMount: function() {
+            this.bindAsObject(
+              new Firebase("https://sweltering-fire-9313.firebaseio.com/developers/" +
+              this.state.developer.username + '/'),
+              "developer"
+            );
+          },
+
+          addPoints: function(username, numberOfPointsAdded){
+            var numberOfPoints = this.state.developer.numberOfPoints + numberOfPointsAdded;
+
+            this.firebaseRefs["developer"].update({
+              'numberOfPoints': numberOfPoints
+            });
+          },
+
+          removePoints: function(username, numberOfPointsSubtracted){
+            var numberOfPoints = this.state.developer.numberOfPoints - numberOfPointsSubtracted;
+
+            this.firebaseRefs["developer"].update({
+              'numberOfPoints': numberOfPoints
+            });
+          },
 
           render: function(){
             return(
               <li key={this.props.index}>
-                {this.props.developer.username} : {this.props.developer.numberOfPoints}
-                <button onClick={this.addPoints.bind(this, this.props.developer.username, 10) }>Add 10 points</button>
-                <button onClick={this.removePoints.bind(this, this.props.developer.username, 5)
+                {this.state.developer.username} : {this.state.developer.numberOfPoints}
+                <button onClick={this.addPoints.bind(this, this.state.developer.username, 10) }>Add 10 points</button>
+                <button onClick={this.removePoints.bind(this, this.state.developer.username, 5)
                 }>Remove 5 points</button>
               </li>
             );
