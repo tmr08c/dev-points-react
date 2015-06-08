@@ -1,0 +1,126 @@
+<!-- https://docs.google.com/drawings/d/18EpRSCM3yicxFrF0CVODMs-uQUEfRDstXPtEZnWlqOc/edit?usp=sharing -->
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router/0.11.6/react-router.js"></script>
+    <script src="http://kenwheeler.github.io/mcfly/McFly.js"></script>
+</head>
+<body>
+    <div id="app-container"></div>
+    <script type="text/jsx">
+
+          /**
+          *
+          * Assignment:
+          *
+          * 1. Add a new button that has a new callback that fires a new action
+          * 2. Update the store with new data (ie., "Kittens" + Math.floor(Math.Random()*100000))
+          * 3. console.log(getRecipes()) the new store value from a component's render method to make sure the data made the trip
+          *
+          */
+
+        /** McFly */
+
+        var Flux = new McFly();
+
+        /** Store */
+
+        _developers = [
+          { username: 'Troy', numberOfPoints: 0 }
+        ];
+
+        function addPoints(username, numberOfPoints){
+          _developers.forEach(function(developer){
+            if(developer.username == username){
+              developer.numberOfPoints += numberOfPoints;
+            }
+          });
+        }
+
+        var DeveloperStore = Flux.createStore({
+            getDevelopers: function(){
+               return _developers;
+            }
+        }, function(payload){
+            if(payload.actionType === "ADD_POINTS") {
+                console.log(payload);
+                addPoints(payload.username, payload.numberOfPoints);
+                DeveloperStore.emitChange();
+            }
+        });
+
+        /** Actions */
+
+        var DeveloperActions = Flux.createActions({
+            addPoints: function(pointChangeobject){
+              console.log('adding points');
+               return {
+                  actionType: "ADD_POINTS",
+                  username: pointChangeobject.username,
+                  numberOfPoints: pointChangeobject.numberOfPoints
+               }
+            }
+        });
+
+        function getDevelopers(){
+           return {
+               developers: DeveloperStore.getDevelopers()
+           }
+        }
+
+        /** Controller View */
+
+        var DeveloperController = React.createClass({
+            mixins: [DeveloperStore.mixin],
+            getInitialState: function(){
+                return getDevelopers();
+            },
+            storeDidChange: function() {
+                this.setState(getDevelopers());
+            },
+            render: function() {
+                return <Developers developers={this.state.developers} />;
+            }
+        });
+
+        /** Component */
+
+        var Developers = React.createClass({
+            render: function() {
+              return (
+                <div className="dev_points__app">
+                    <ul className="developers">
+                      { this.props.developers.map(function(developer, index){
+                          return <Developer index={index} developer={developer} />;
+                        })}
+                    </ul>
+                </div>
+                )
+            }
+        });
+
+        var Developer = React.createClass({
+            addPoints: function(username, numberOfPoints){
+                DeveloperActions.addPoints({username: username, numberOfPoints: numberOfPoints});
+            },
+
+          render: function(){
+            return(
+              <li key={this.props.index}>
+                {this.props.developer.username} : {this.props.developer.numberOfPoints}
+                <button onClick={this.addPoints.bind(this, this.props.developer.username, 10) }>Add 10 points</button>
+              </li>
+            );
+          }
+        });
+
+        React.render(<DeveloperController />, document.body);
+    </script>
+</body>
+</html>
