@@ -1,0 +1,32 @@
+.developers{
+  margin: 0 50%;
+}
+
+.developer{
+  width: 15em;
+  margin: 20px 0;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 5px 30px;
+}
+
+.name{
+  text-transform: capitalize;
+  font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", "sans-serif";
+  text-align: center;
+  font-size: 25px;
+  font-weight: 100;
+  margin-bottom: 15px;
+}
+
+.points{
+  text-align: center;
+  font-size: 35px;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.button-group{
+  margin-top: 1em;
+  text-align: center;
+}

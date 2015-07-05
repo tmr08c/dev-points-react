@@ -2,9 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style type="text/css">
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="./style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
@@ -116,11 +114,11 @@
             render: function() {
               return (
                 <div className="dev_points__app">
-                    <ul className="developers">
+                    <div className="developers">
                       { this.props.developers.map(function(developer, index){
                           return <Developer index={index} developer={developer} />;
                         })}
-                    </ul>
+                    </div>
                 </div>
                 )
             }
@@ -166,12 +164,19 @@
 
           render: function(){
             return(
-              <li key={this.props.index}>
-                {this.state.developer.username} : {this.state.developer.numberOfPoints}
-                <button onClick={this.addPoints.bind(this, this.state.developer.username, 10) }>Add 10 points</button>
-                <button onClick={this.removePoints.bind(this, this.state.developer.username, 5)
-                }>Remove 5 points</button>
-              </li>
+              <div className='developer' key={this.props.index}>
+                <div className='name'>
+                  {this.state.developer.username}
+                </div>
+                <div className='points'>
+                  {this.state.developer.numberOfPoints}
+                </div>
+                <div className='button-group'>
+                  <button onClick={this.addPoints.bind(this, this.state.developer.username, 10) }>Add 10 points</button>
+                  <button onClick={this.removePoints.bind(this, this.state.developer.username, 5)
+                    }>Remove 5 points</button>
+                </div>
+              </div>
             );
           }
         });
