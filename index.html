@@ -12,6 +12,8 @@
     <script src="https://cdn.firebase.com/js/client/1.0.17/firebase.js"></script>
     <!-- ReactFire -->
     <script src="https://cdn.firebase.com/libs/reactfire/0.1.6/reactfire.min.js"></script>
+    <! -- FontAwesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 </head>
 <body>
     <div id="app-container"></div>
@@ -102,9 +104,30 @@
                   {this.state.developer.numberOfPoints}
                 </div>
                 <div className='button-group'>
-                  <button onClick={this.addPoints.bind(this, this.state.developer.username, 10) }>Add 10 points</button>
-                  <button onClick={this.removePoints.bind(this, this.state.developer.username, 5)
-                    }>Remove 5 points</button>
+
+                  <h3>Gain Points</h3>
+
+                  <button onClick={this.addPoints.bind(this, this.state.developer.username, 10)} >
+                    <i className="fa fa-life-ring"></i>&nbsp;Fix
+                  </button>
+                  <button onClick={this.addPoints.bind(this, this.state.developer.username, 30)} >
+                    <i className="fa fa-wrench"></i>&nbsp;Change
+                  </button>
+                  <button onClick={this.addPoints.bind(this, this.state.developer.username, 50)} >
+                    <i className="fa fa-star"></i>&nbsp;Feature
+                  </button>
+
+                  <h3>Lose Points</h3>
+
+                  <button onClick={this.removePoints.bind(this, this.state.developer.username, 5) }>
+                    <i className="fa fa-taxi"></i>&nbsp;Rubocop
+                  </button>
+                  <button onClick={this.removePoints.bind(this, this.state.developer.username, 5) }>
+                    <i className="fa fa-bug"></i>&nbsp;Spec
+                  </button>
+                  <button onClick={this.removePoints.bind(this, this.state.developer.username, 5) }>
+                    <i className="fa fa-gavel"></i>&nbsp;QA Bug
+                  </button>
                 </div>
               </div>
             );
