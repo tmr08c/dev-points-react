@@ -2,45 +2,6 @@ var React = require('react');
 var ReactFireMixin = require('reactfire');
 var Firebase = require('firebase');
 
-/** Controller View */
-
-var DeveloperController = React.createClass({
-  mixins: [ReactFireMixin],
-
-  getInitialState: function() {
-    return {developers: []};
-  },
-
-  componentWillMount: function() {
-    this.bindAsArray(
-      new Firebase("https://sweltering-fire-9313.firebaseio.com/developers/"),
-      "developers"
-    );
-  },
-
-  render: function() {
-    return <Developers developers={this.state.developers} />;
-  }
-});
-
-/** Component */
-
-var Developers = React.createClass({
-  render: function() {
-    return (
-      <div className="dev_points__app">
-        <div className="developers">
-        {
-          this.props.developers.map(function(developer, index){
-            return <Developer index={index} developer={developer} />;
-          })
-        }
-        </div>
-      </div>
-    )
-  }
-});
-
 var Developer = React.createClass({
   mixins: [ReactFireMixin],
 
@@ -120,4 +81,4 @@ var Developer = React.createClass({
   }
 });
 
-module.exports = DeveloperController;
+module.exports = Developer;

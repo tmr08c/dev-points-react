@@ -7,8 +7,6 @@ var app = express();
 jsx.install();
 
 
-var DeveloperController = require('./views/index.jsx');
-
 app.use('/style.css', express.static('./style.css'));
 
 app.use('/bundle.js', function(req, res) {
